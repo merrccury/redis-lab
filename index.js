@@ -32,39 +32,10 @@ const getDate = () => {
     return `${arrDate[1]}${arrDate[0]}${arrDate[2]}`;
 }
 
-app.post('/add', (req, res) => {
+app.post('/add/:date', (req, res) => {
     console.log(req.body);
-    console.log(getDate())
-    client.set(getDate(), JSON.stringify({
-        top3: {
-            one: {
-                runner: "Везунчик",
-                result: 456
-            },
-            two: {
-                runner: "Счастливчик",
-                result: 432
-            },
-            three: {
-                runner: "Молния",
-                result: 223
-            }
-        },
-        worst3: {
-            one: {
-                runner: "Жаба",
-                result: 231
-            },
-            two: {
-                runner: "Ананас",
-                result: 211
-            },
-            three: {
-                runner: "Кляча",
-                result: 123
-            }
-        }
-    }));
+    console.log(req.params.date);
+    client.set(req.params.date, JSON.stringify(req.body));
     res.send({ok: 'ok'});
 });
 

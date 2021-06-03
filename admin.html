@@ -4,7 +4,91 @@
     <meta charset="UTF-8">
     <title>Admin Скачки By</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
 <body>
+<form id="addForm">
+    <p>Наилучшие результаты</p>
+    <label for="top1Name">1 бегун</label>
+    <input required type="text" id="top1Name">
+    <label for="top1time">Время забега</label>
+    <input required type="number" id="top1time">
+    <br>
+    <label for="top2Name">2 бегун</label>
+    <input required type="text" id="top2Name">
+    <label for="top2time">Время забега</label>
+    <input required type="number" id="top2time">
+    <br>
+    <label for="top3Name">3 бегун</label>
+    <input required type="text" id="top3Name">
+    <label for="top3time">Время забега</label>
+    <input required type="number" id="top3time">
+    <p>Наилучшие результаты</p>
+    <label for="worst1Name">1 бегун</label>
+    <input required type="text" id="worst1Name">
+    <label for="worst1time">Время забега</label>
+    <input required type="number" id="worst1time">
+    <br>
+    <label for="worst2Name">2 бегун</label>
+    <input required type="text" id="worst2Name">
+    <label for="worst2time">Время забега</label>
+    <input required type="number" id="worst2time">
+    <br>
+    <label for="worst3Name">3 бегун</label>
+    <input required type="text" id="worst3Name">
+    <label for="worst3time">Время забега</label>
+    <input required type="number" id="worst3time">
+    <br>
+    <input type="date" required id="dateOfRace">
+    <input type="submit" value="Добавить">
+</form>
 
+<script>
+    $("#addForm").submit((event) => {
+        event.preventDefault();
+        const arrDate = $("#dateOfRace").val().split('-');
+        const date = arrDate[2] + arrDate[1] + arrDate[0];
+        fetch(`/add/${date}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body:JSON.stringify({
+                top3: {
+                    one: {
+                        runner: $("#top1Name").val(),
+                        result: parseInt($("#top1time").val())
+                    },
+                    two: {
+                        runner: $("#top2Name").val(),
+                        result: parseInt($("#top2time").val())
+                    },
+                    three: {
+                        runner: $("#top3Name").val(),
+                        result: parseInt($("#top3time").val())
+                    }
+                },
+                worst3: {
+                    one: {
+                        runner: $("#worst1Name").val(),
+                        result: parseInt($("#worst1time").val())
+                    },
+                    two: {
+                        runner: $("#worst2Name").val(),
+                        result: parseInt($("#worst2time").val())
+                    },
+                    three: {
+                        runner: $("#worst3Name").val(),
+                        result: parseInt($("#worst3time").val())
+                    }
+                }
+            })
+        })
+        .then(result=>{
+            $('#addForm').trigger("reset");
+        })
+    });
+</script>
 </body>
 </html>
