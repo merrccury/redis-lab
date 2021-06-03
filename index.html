@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Скачки By</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
+<body>
+<form id="searchForm">
+    <label>
+        Дата скачек
+        <input type="date" id="dateOfRace" required>
+    </label>
+    <input type="Submit" value="Поиск">
+</form>
+
+<div id="result">
+
+</div>
+
+<script>
+    $("#searchForm").submit((event) => {
+        event.preventDefault();
+        const arrDate = $("#dateOfRace").val().split('-');
+        const date = arrDate[2] + arrDate[1] + arrDate[0];
+        console.log(date);
+        fetch(`/get/${date}`)
+            .then(response => {
+                if (response.status === 404)
+                    throw new Error('Нету информации')
+                else
+                    return response.json()
+            })
+            .then(data => {
+                const result = $("#result");
+                result.empty();
+                result.html(`<table>
+                            <tr>
+                                <th>Наилучшие результаты</th>
+                                <th>Наихушие результаты 2</th>
+                            </tr>
+                            <tr>
+                                <td>${data.top3.one.runner} <span>${data.top3.one.result}</span> </td>
+                                <td>${data.worst3.one.runner} <span>${data.worst3.one.result}</span> </td>
+                            </tr>
+                             <tr>
+                                <td>${data.top3.two.runner} <span>${data.top3.two.result}</span> </td>
+                                <td>${data.worst3.two.runner} <span>${data.worst3.two.result}</span> </td>
+                            </tr>
+                            <tr>
+                                <td>${data.top3.three.runner} <span>${data.top3.three.result}</span> </td>
+                                <td>${data.worst3.three.runner} <span>${data.worst3.three.result}</span> </td>
+                            </tr>
+                            </table>`);
+
+                console.log(data)
+            })
+            .catch(error => {
+                const result = $("#result");
+                result.empty();
+                result.text(error.message);
+            })
+    })
+    ;
+</script>
+</body>
+</html>
